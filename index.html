@@ -3,66 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ten Shrines, One Journey</title>
+  <title>Ten Shrines · One Journey</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-      padding: 20px; 
-      max-width: 400px; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      padding: 40px 20px; 
+      max-width: 420px; 
       margin: 0 auto;
-      background: #faf8f5;
+      background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
-    h2 { 
-      text-align: center; 
-      color: #c41e3a;
-      margin-bottom: 30px;
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
     }
-    input, select, button { 
+    .shrine-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    h1 {
+      font-size: 26px;
+      color: #8B0000;
+      font-weight: 300;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 15px;
+      color: #555;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+    }
+    input, select {
       width: 100%; 
-      padding: 15px; 
-      margin: 10px 0; 
-      font-size: 16px; 
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      padding: 18px; 
+      font-size: 18px; 
+      border: 2px solid #e0d5c5;
+      border-radius: 12px;
+      background: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #c41e3a;
     }
     button { 
-      background: #c41e3a; 
+      width: 100%; 
+      padding: 18px; 
+      background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%); 
       color: white; 
       border: none;
-      font-weight: bold;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    }
+    button:active { 
+      opacity: 0.9;
     }
     .error { 
       color: #c41e3a; 
       text-align: center;
-      margin-top: 10px;
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .progress {
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
-  <h2>⛩️ Ten Shrines<br>One Journey</h2>
+  <div class="header">
+    <span class="shrine-icon">⛩️</span>
+    <h1>Ten Shrines · One Journey</h1>
+  </div>
   
-  <input type="text" id="name" placeholder="姓名 / Name">
-  <input type="text" id="code" placeholder="通关码 / Code">
+  <div class="progress" id="progress">Step 1 of 3</div>
   
-  <select id="station">
-    <option value="">选择站点 / Select Station</option>
-    <option value="1">1. 平安神宫 Heian Shrine</option>
-    <option value="2">2. 熊野神社 Kumano Shrine</option>
-    <option value="3">3. 下御灵神社 Shimogoryo Shrine</option>
-    <option value="4">4. 御金神社 Mikane Shrine</option>
-    <option value="5">5. 菅原院天满宫 Sugawarain</option>
-    <option value="6">6. 护王神社 Goou Shrine</option>
-    <option value="7">7. 京都御所 Kyoto Imperial</option>
-    <option value="8">8. 梨木神社 Nashinoki Shrine</option>
-    <option value="9">9. 河合神社 Kawai Shrine</option>
-    <option value="10">10. 下鸭神社 Shimogamo</option>
-  </select>
+  <div class="step active" id="step1">
+    <label for="name">Your Name</label>
+    <input type="text" id="name" placeholder="Enter your name" autofocus>
+    <button onclick="nextStep(1)">Next</button>
+    <div class="error" id="error1"></div>
+  </div>
   
-  <input type="text" id="password" placeholder="该站专属密码 / Password">
-  <button onclick="go()">确认 / Submit</button>
-  <div id="error" class="error"></div>
+  <div class="step" id="step2">
+    <label for="station">Select Station</label>
+    <select id="station">
+      <option value="">Choose a shrine...</option>
+      <option value="1">1. Heian Shrine 平安神宮</option>
+      <option value="2">2. Kumano Shrine 熊野神社</option>
+      <option value="3">3. Shimogoryo Shrine 下御霊神社</option>
+      <option value="4">4. Mikane Shrine 御金神社</option>
+      <option value="5">5. Sugawarain Tanmangu 菅原院天満宮</option>
+      <option value="6">6. Goou Shrine 護王神社</option>
+      <option value="7">7. Kyoto Imperial Palace 京都御所</option>
+      <option value="8">8. Nashinoki Shrine 梨木神社</option>
+      <option value="9">9. Kawai Shrine 河合神社</option>
+      <option value="10">10. Shimogamo Shrine 下鴨神社</option>
+    </select>
+    <button onclick="nextStep(2)">Next</button>
+    <div class="error" id="error2"></div>
+  </div>
+  
+  <div class="step" id="step3">
+    <label for="password">Station Password</label>
+    <input type="text" id="password" placeholder="Ask your guide">
+    <button onclick="submitForm()">Collect Stamp</button>
+    <div class="error" id="error3"></div>
+  </div>
 
   <script>
     const passwords = {
@@ -83,30 +151,45 @@
       "10": "https://script.google.com/macros/s/AKfycbwBELij4badEmt_L35vYTn8aftOshcqVzVbj24kncEYhyp460-DKr5gY6gorOEthfBd/exec"
     };
 
-    function go() {
-      var name = document.getElementById('name').value.trim();
-      var code = document.getElementById('code').value.trim();
-      var station = document.getElementById('station').value;
-      var password = document.getElementById('password').value.trim();
+    let userName = '';
+
+    function nextStep(currentStep) {
+      const errorDiv = document.getElementById('error' + currentStep);
       
-      if (!name) {
-        document.getElementById('error').innerText = "请输入姓名";
-        return;
+      if (currentStep === 1) {
+        userName = document.getElementById('name').value.trim();
+        if (!userName) {
+          errorDiv.innerText = "Please enter your name";
+          return;
+        }
       }
-      if (code !== "2026") {
-        document.getElementById('error').innerText = "通关码有误";
-        return;
+      
+      if (currentStep === 2) {
+        const station = document.getElementById('station').value;
+        if (!station) {
+          errorDiv.innerText = "Please select a station";
+          return;
+        }
       }
-      if (!station) {
-        document.getElementById('error').innerText = "请选择站点";
-        return;
-      }
+      
+      errorDiv.innerText = '';
+      document.getElementById('step' + currentStep).classList.remove('active');
+      document.getElementById('step' + (currentStep + 1)).classList.add('active');
+      document.getElementById('progress').innerText = 'Step ' + (currentStep + 1) + ' of 3';
+    }
+
+    function submitForm() {
+      const station = document.getElementById('station').value;
+      const password = document.getElementById('password').value.trim();
+      const errorDiv = document.getElementById('error3');
+      
       if (password !== passwords[station]) {
-        document.getElementById('error').innerText = "密码有误";
+        errorDiv.innerText = "Invalid password. Please ask your guide.";
         return;
       }
       
-      window.location.href = links[station] + "?name=" + encodeURIComponent(name);
+      errorDiv.innerText = '';
+      window.location.href = links[station] + "?name=" + encodeURIComponent(userName);
     }
   </script>
 </body>
