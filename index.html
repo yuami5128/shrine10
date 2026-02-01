@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ten Shrines, One Journey</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+      padding: 20px; 
+      max-width: 400px; 
+      margin: 0 auto;
+      background: #faf8f5;
+    }
+    h2 { 
+      text-align: center; 
+      color: #c41e3a;
+      margin-bottom: 30px;
+    }
+    input, select, button { 
+      width: 100%; 
+      padding: 15px; 
+      margin: 10px 0; 
+      font-size: 16px; 
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    button { 
+      background: #c41e3a; 
+      color: white; 
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .error { 
+      color: #c41e3a; 
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>⛩️ Ten Shrines<br>One Journey</h2>
+  
+  <input type="text" id="name" placeholder="姓名 / Name">
+  <input type="text" id="code" placeholder="通关码 / Code">
+  
+  <select id="station">
+    <option value="">选择站点 / Select Station</option>
+    <option value="1">1. 平安神宫 Heian Shrine</option>
+    <option value="2">2. 熊野神社 Kumano Shrine</option>
+    <option value="3">3. 下御灵神社 Shimogoryo Shrine</option>
+    <option value="4">4. 御金神社 Mikane Shrine</option>
+    <option value="5">5. 菅原院天满宫 Sugawarain</option>
+    <option value="6">6. 护王神社 Goou Shrine</option>
+    <option value="7">7. 京都御所 Kyoto Imperial</option>
+    <option value="8">8. 梨木神社 Nashinoki Shrine</option>
+    <option value="9">9. 河合神社 Kawai Shrine</option>
+    <option value="10">10. 下鸭神社 Shimogamo</option>
+  </select>
+  
+  <input type="text" id="password" placeholder="该站专属密码 / Password">
+  <button onclick="go()">确认 / Submit</button>
+  <div id="error" class="error"></div>
+
+  <script>
+    const passwords = {
+      "1": "1895", "2": "4700", "3": "0518", "4": "7777", "5": "6666",
+      "6": "9999", "7": "0794", "8": "2222", "9": "3838", "10": "1212"
+    };
+    
+    const links = {
+      "1": "https://script.google.com/macros/s/AKfycbzGfJhcX480MPZw-rIaq40sSTmlbbdmxZhG7Ss37AuOX4TIMvsQSrmohA3eJvDSNlr1/exec",
+      "2": "https://script.google.com/macros/s/AKfycbz2yYGRDAtCilOiBhnQoBYAhM1eFB3EXNQesQox1gNaisTqxiN2YpKuSAJtiGS7wkAE/exec",
+      "3": "https://script.google.com/macros/s/AKfycby6RcthCcG0dySmNDz900CUMBQ1rLGnrwW-bodEmcfTtJGZ_eCeONFahjpaQx7RETMw/exec",
+      "4": "https://script.google.com/macros/s/AKfycbztC4E389BguecrvhJaWn9vVC0u1El4Q2xJCZDHU5NI9FecSNDBe94PiBz9HMCJSdWZOg/exec",
+      "5": "https://script.google.com/macros/s/AKfycbxOXbg3Wt_NAxvAfgo5dfnpOhuch77zJVNvPj8KIDSQrENU2CprLI28XpPLDI18Sghm/exec",
+      "6": "https://script.google.com/macros/s/AKfycbxQH3R0GdYGESXSYqdmj5hx9TYhMBZ7BbJNnagFYtaPqmSdjwvBSvVmCilG64YNepX5/exec",
+      "7": "https://script.google.com/macros/s/AKfycbx6NHmdo48QBzWwE1n0kFSfCe4GHAipmz5DT8KaI7UdwipoaOoRu8iUtTnPHib7bgfR/exec",
+      "8": "https://script.google.com/macros/s/AKfycbyKQduLyREfCK19Rabmh20bD-4Y1lyOAeBackYHQ490jORLPjjB8zLKju-ZO9IaJy9iag/exec",
+      "9": "https://script.google.com/macros/s/AKfycbxfsT_rKXNn4-XDq-19DbWpw0Noo0UMNDaiH09uvm9JxlbPGmK0ugeHMaBFmHYKwGMH/exec",
+      "10": "https://script.google.com/macros/s/AKfycbwBELij4badEmt_L35vYTn8aftOshcqVzVbj24kncEYhyp460-DKr5gY6gorOEthfBd/exec"
+    };
+
+    function go() {
+      var name = document.getElementById('name').value.trim();
+      var code = document.getElementById('code').value.trim();
+      var station = document.getElementById('station').value;
+      var password = document.getElementById('password').value.trim();
+      
+      if (!name) {
+        document.getElementById('error').innerText = "请输入姓名";
+        return;
+      }
+      if (code !== "2026") {
+        document.getElementById('error').innerText = "通关码有误";
+        return;
+      }
+      if (!station) {
+        document.getElementById('error').innerText = "请选择站点";
+        return;
+      }
+      if (password !== passwords[station]) {
+        document.getElementById('error').innerText = "密码有误";
+        return;
+      }
+      
+      window.location.href = links[station] + "?name=" + encodeURIComponent(name);
+    }
+  </script>
+</body>
+</html>
