@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Certificate - Ten Shrines</title>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -23,14 +24,16 @@
       background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%);
       color: white; padding: 15px 40px; border-radius: 12px;
       border: none; font-size: 18px; font-weight: 600; cursor: pointer;
+      margin: 5px;
     }
     #preview { max-width: 100%; margin-top: 20px; border-radius: 8px; display: none; }
     
-    .certificate {
+    /* 证书区域 - 专门用于截图 */
+    #captureArea {
       background: white; padding: 30px 20px; border-radius: 20px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center;
       max-width: 400px; margin: 0 auto; border: 3px solid #c41e3a;
-      display: none;
+      display: none; position: relative;
     }
     .cert-icon { font-size: 40px; margin-bottom: 10px; }
     .cert-title { font-size: 22px; color: #8B0000; margin-bottom: 5px; font-weight: bold; }
@@ -58,12 +61,19 @@
       animation: fall linear infinite; pointer-events: none;
     }
     @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    
+    /* 保存按钮区域 */
+    .save-area {
+      text-align: center; margin-top: 20px; display: none;
+    }
+    .save-hint {
+      color: #666; font-size: 14px; margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container" id="uploadSection">
     <h1>🏆 Your Journey Complete!</h1>
-    <div class="stamps-grid" id="stampsGrid"></div>
     <div class="upload-area">
       <p style="color: #666; margin-bottom: 20px;">Upload your photo to generate certificate</p>
       <input type="file" id="photoInput" accept="image/*" style="display:none;">
@@ -74,7 +84,8 @@
     </div>
   </div>
 
-  <div class="certificate" id="certificateSection">
+  <!-- 证书截图区域 -->
+  <div id="captureArea">
     <div class="cert-icon">⛩️</div>
     <div class="cert-title">Ten Shrines · One Journey</div>
     <div class="cert-subtitle">Certificate of Completion</div>
@@ -86,6 +97,14 @@
     
     <div class="cert-date" id="certDate"></div>
     <div class="cert-seal">🌸</div>
+  </div>
+
+  <!-- 保存按钮区域（在截图区域外） -->
+  <div class="save-area" id="saveArea">
+    <p class="save-hint">👇 点击保存证书到相册</p>
+    <button class="upload-btn" onclick="saveCertificate()">💾 Save Certificate</button>
+    <br><br>
+    <button class="upload-btn" onclick="location.reload()" style="background: #666;">🔄 Create New</button>
   </div>
 
   <script>
@@ -105,15 +124,6 @@
       "https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png"
     ];
     
-    // 上传页显示10个朱印
-    const grid = document.getElementById('stampsGrid');
-    shrineImages.forEach(src => {
-      const img = document.createElement('img');
-      img.src = src;
-      img.className = 'stamp-thumb';
-      grid.appendChild(img);
-    });
-    
     // 照片上传预览
     document.getElementById('photoInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
@@ -131,7 +141,9 @@
     // 生成证书
     function generate() {
       document.getElementById('uploadSection').style.display = 'none';
-      document.getElementById('certificateSection').style.display = 'block';
+      
+      const captureArea = document.getElementById('captureArea');
+      captureArea.style.display = 'block';
       
       // 显示姓名
       document.getElementById('certName').textContent = name;
@@ -144,12 +156,15 @@
       
       // 证书页显示10个朱印
       const stampContainer = document.getElementById('certStamps');
-      shrineImages.forEach(src => {
+      shrineImages.forEach((src) => {
         const img = document.createElement('img');
         img.src = src;
         img.className = 'stamp-thumb';
         stampContainer.appendChild(img);
       });
+      
+      // 显示保存按钮
+      document.getElementById('saveArea').style.display = 'block';
       
       // 樱花动画
       for(let i=0; i<15; i++) {
@@ -161,6 +176,36 @@
         sakura.style.animationDelay = Math.random() * 2 + 's';
         document.body.appendChild(sakura);
       }
+    }
+    
+    // 保存证书为图片
+    function saveCertificate() {
+      const captureArea = document.getElementById('captureArea');
+      
+      // 临时隐藏保存按钮区域，避免截入
+      document.getElementById('saveArea').style.display = 'none';
+      
+      html2canvas(captureArea, {
+        scale: 2, // 高清
+        backgroundColor: '#ffffff',
+        useCORS: true
+      }).then(canvas => {
+        // 生成下载链接
+        const link = document.createElement('a');
+        link.download = 'Ten_Shrines_Certificate_' + name + '.png';
+        link.href = canvas.toDataURL();
+        link.click();
+        
+        // 恢复保存按钮
+        document.getElementById('saveArea').style.display = 'block';
+        
+        // 提示
+        alert('Certificate saved! Check your downloads.');
+      }).catch(err => {
+        console.error('Save failed:', err);
+        alert('Save failed, please screenshot instead.');
+        document.getElementById('saveArea').style.display = 'block';
+      });
     }
   </script>
 </body>
