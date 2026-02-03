@@ -18,7 +18,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 樱花动画 - 更慢更有意境 */
+/* 樱花动画 - 更慢更有意境 8-15秒 */
 .sakura {
   position: fixed;
   top: -10%;
@@ -79,9 +79,9 @@ body {
   margin-top: 3px;
 }
 
-/* 主内容区 */
+/* 主内容区 - 增加顶部间距避开标题 */
 .content {
-  padding-top: 120px;
+  padding-top: 160px;
   padding-bottom: 100px;
   position: relative;
   z-index: 1;
@@ -154,10 +154,11 @@ body {
   display: none;
 }
 
-/* 游客照片区域 */
+/* 游客照片区域 - 增加顶部间距 */
 .hero-section {
   text-align: center;
   padding: 40px 20px;
+  padding-top: 60px; /* 额外间距 */
 }
 
 .visitor-photo {
@@ -315,8 +316,17 @@ body {
   white-space: nowrap;
 }
 
-/* 响应式 */
+/* 响应式 - 手机端优先 */
 @media (max-width: 400px) {
+  /* 手机端增加更多顶部空间 */
+  .content {
+    padding-top: 180px;
+  }
+  
+  .hero-section {
+    padding-top: 80px; /* 手机端照片区域更多间距 */
+  }
+  
   .visitor-photo {
     width: 160px;
     height: 160px;
@@ -558,14 +568,14 @@ function generateCertificate() {
   
   document.getElementById('certNumber').textContent = certNumber;
   
-  // 创建樱花动画 - 更慢更有意境
+  // 创建樱花动画 - 更慢更有意境 8-15秒
   createSakura();
   
   // 初始化滚动动画
   initAnimation();
 }
 
-// 创建樱花 - 速度改为4-8秒
+// 创建樱花 - 速度改为8-15秒（更慢）
 function createSakura() {
   const container = document.getElementById('sakuraContainer');
   for (let i = 0; i < 15; i++) {
@@ -573,8 +583,8 @@ function createSakura() {
     sakura.className = 'sakura';
     sakura.innerHTML = '🌸';
     sakura.style.left = Math.random() * 100 + '%';
-    sakura.style.animationDuration = (Math.random() * 4 + 4) + 's'; // 4-8秒
-    sakura.style.animationDelay = Math.random() * 3 + 's';
+    sakura.style.animationDuration = (Math.random() * 7 + 8) + 's'; // 8-15秒
+    sakura.style.animationDelay = Math.random() * 5 + 's';
     container.appendChild(sakura);
   }
 }
