@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>十社巡礼 · 一程一印</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; 
+      padding: 40px 20px; 
+      max-width: 420px; 
+      margin: 0 auto;
+      background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .shrine-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    h1 {
+      font-size: 24px;
+      color: #8B0000;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 15px;
+      color: #555;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: center;
+    }
+    input, select {
+      width: 100%; 
+      padding: 18px; 
+      font-size: 18px; 
+      border: 2px solid #e0d5c5;
+      border-radius: 12px;
+      background: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #c41e3a;
+    }
+    button { 
+      width: 100%; 
+      padding: 18px; 
+      background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%); 
+      color: white; 
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    }
+    button:active { 
+      opacity: 0.9;
+    }
+    .error { 
+      color: #c41e3a; 
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .progress {
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="shrine-icon">⛩️</span>
+    <h1>十社巡礼 · 一程一印</h1>
+    <div class="subtitle">完走证书</div>
+  </div>
+  
+  <div class="progress" id="progress">步骤 1 / 3</div>
+  
+  <div class="step active" id="step1">
+    <label for="name">请输入您的姓名</label>
+    <input type="text" id="name" placeholder="您的名字" autofocus>
+    <button onclick="nextStep(1)">下一步</button>
+    <div class="error" id="error1"></div>
+  </div>
+  
+  <div class="step" id="step2">
+    <label for="station">选择站点</label>
+    <select id="station">
+      <option value="">请选择神社...</option>
+      <option value="1">1. 平安神宫 Heian Shrine</option>
+      <option value="2">2. 熊野神社 Kumano Shrine</option>
+      <option value="3">3. 下御灵神社 Shimogoryo Shrine</option>
+      <option value="4">4. 御金神社 Mikane Shrine</option>
+      <option value="5">5. 菅原院天满宫 Sugawarain Tanmangu</option>
+      <option value="6">6. 护王神社 Goou Shrine</option>
+      <option value="7">7. 京都御所 Kyoto Imperial Palace</option>
+      <option value="8">8. 梨木神社 Nashinoki Shrine</option>
+      <option value="9">9. 河合神社 Kawai Shrine</option>
+      <option value="10">10. 下鸭神社 Shimogamo Shrine</option>
+    </select>
+    <button onclick="nextStep(2)">下一步</button>
+    <div class="error" id="error2"></div>
+  </div>
+  
+  <div class="step" id="step3">
+    <label for="password">站点密码</label>
+    <input type="text" id="password" placeholder="请询问向导">
+    <button onclick="submitForm()">领取完走证书</button>
+    <div class="error" id="error3"></div>
+  </div>
+
+  <script>
+    const passwords = {
+      "1": "1895", "2": "4700", "3": "0518", "4": "7777", "5": "6666",
+      "6": "9999", "7": "0794", "8": "2222", "9": "3838", "10": "1212"
+    };
+    
+    const links = {
+      "1": "https://script.google.com/macros/s/AKfycbzGfJhcX480MPZw-rIaq40sSTmlbbdmxZhG7Ss37AuOX4TIMvsQSrmohA3eJvDSNlr1/exec",
+      "2": "https://script.google.com/macros/s/AKfycbz2yYGRDAtCilOiBhnQoBYAhM1eFB3EXNQesQox1gNaisTqxiN2YpKuSAJtiGS7wkAE/exec",
+      "3": "https://script.google.com/macros/s/AKfycby6RcthCcG0dySmNDz900CUMBQ1rLGnrwW-bodEmcfTtJGZ_eCeONFahjpaQx7RETMw/exec",
+      "4": "https://script.google.com/macros/s/AKfycbztC4E389BguecrvhJaWn9vVC0u1El4Q2xJCZDHU5NI9FecSNDBe94PiBz9HMCJSdWZOg/exec",
+      "5": "https://script.google.com/macros/s/AKfycbxOXbg3Wt_NAxvAfgo5dfnpOhuch77zJVNvPj8KIDSQrENU2CprLI28XpPLDI18Sghm/exec",
+      "6": "https://script.google.com/macros/s/AKfycbxQH3R0GdYGESXSYqdmj5hx9TYhMBZ7BbJNnagFYtaPqmSdjwvBSvVmCilG64YNepX5/exec",
+      "7": "https://script.google.com/macros/s/AKfycbx6NHmdo48QBzWwE1n0kFSfCe4GHAipmz5DT8KaI7UdwipoaOoRu8iUtTnPHib7bgfR/exec",
+      "8": "https://script.google.com/macros/s/AKfycbyKQduLyREfCK19Rabmh20bD-4Y1lyOAeBackYHQ490jORLPjjB8zLKju-ZO9IaJy9iag/exec",
+      "9": "https://script.google.com/macros/s/AKfycbxfsT_rKXNn4-XDq-19DbWpw0Noo0UMNDaiH09uvm9JxlbPGmK0ugeHMaBFmHYKwGMH/exec",
+      "10": "https://你的用户名.github.io/你的仓库名/certificate-cn.html",
+    };
+
+    let userName = '';
+
+    function nextStep(currentStep) {
+      const errorDiv = document.getElementById('error' + currentStep);
+      
+      if (currentStep === 1) {
+        userName = document.getElementById('name').value.trim();
+        if (!userName) {
+          errorDiv.innerText = "请输入您的姓名";
+          return;
+        }
+      }
+      
+      if (currentStep === 2) {
+        const station = document.getElementById('station').value;
+        if (!station) {
+          errorDiv.innerText = "请选择站点";
+          return;
+        }
+      }
+      
+      errorDiv.innerText = '';
+      document.getElementById('step' + currentStep).classList.remove('active');
+      document.getElementById('step' + (currentStep + 1)).classList.add('active');
+      document.getElementById('progress').innerText = '步骤 ' + (currentStep + 1) + ' / 3';
+    }
+
+    function submitForm() {
+      const station = document.getElementById('station').value;
+      const password = document.getElementById('password').value.trim();
+      const errorDiv = document.getElementById('error3');
+      
+      if (password !== passwords[station]) {
+        errorDiv.innerText = "密码错误，请询问向导";
+        return;
+      }
+      
+      errorDiv.innerText = '';
+      window.location.href = links[station] + "?name=" + encodeURIComponent(userName);
+    }
+  </script>
+</body>
+</html>
