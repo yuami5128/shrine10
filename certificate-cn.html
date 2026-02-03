@@ -18,6 +18,23 @@ body {
   overflow-x: hidden;
 }
 
+/* 樱花动画 */
+.sakura {
+  position: fixed;
+  top: -10%;
+  font-size: 20px;
+  animation: fall linear infinite;
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 50;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
 /* 底纹骑行图标 */
 .bg-bike {
   position: fixed;
@@ -275,18 +292,12 @@ body {
   margin-bottom: 10px;
 }
 
-.footer-subtitle {
+.cert-number {
   font-size: 14px;
   color: #666;
-  margin-bottom: 20px;
-}
-
-.cert-info {
-  font-size: 12px;
-  color: #999;
   font-family: 'Courier New', monospace;
   letter-spacing: 1px;
-  line-height: 1.8;
+  margin-top: 15px;
 }
 
 /* 分享提示 */
@@ -341,6 +352,9 @@ body {
 </style>
 </head>
 <body>
+
+<!-- 樱花容器 -->
+<div id="sakuraContainer"></div>
 
 <!-- 底纹骑行图标 -->
 <svg class="bg-bike" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -471,9 +485,8 @@ body {
     <!-- 底部结语 -->
     <div class="footer">
       <div class="footer-seal">⛩️</div>
-      <div class="footer-title">十社骑行达成</div>
-      <div class="footer-subtitle">Ten Shrines Pilgrimage Completed</div>
-      <div class="cert-info" id="certInfo"></div>
+      <div class="footer-title">十社骑行·通关证书</div>
+      <div class="cert-number" id="certNumber"></div>
     </div>
 
     ```
@@ -537,16 +550,33 @@ function generateCertificate() {
   document.getElementById('visitorName').textContent = visitorName;
   document.getElementById('visitorPhoto').src = document.getElementById('preview').src;
   
-  // 生成证书信息
+  // 生成证书号：No. KYOTO-YYYYMMDD-拼音（去掉空格）
   const today = new Date();
-  const dateStr = today.getFullYear() + '.' + String(today.getMonth()+1).padStart(2,'0') + '.' + String(today.getDate()).padStart(2,'0');
-  const randomStr = Math.random().toString(36).substr(2, 6).toUpperCase();
-  const certNumber = 'NO. KYOTO-' + dateStr.replace(/\./g, '') + '-' + randomStr;
+  const dateStr = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
+  const pinyin = visitorName.replace(/\s+/g, '');
+  const certNumber = 'No. KYOTO-' + dateStr + '-' + pinyin;
   
-  document.getElementById('certInfo').innerHTML = certNumber + '<br>' + dateStr;
+  document.getElementById('certNumber').textContent = certNumber;
   
-  // 初始化动画
+  // 创建樱花动画
+  createSakura();
+  
+  // 初始化滚动动画
   initAnimation();
+}
+
+// 创建樱花
+function createSakura() {
+  const container = document.getElementById('sakuraContainer');
+  for (let i = 0; i < 15; i++) {
+    const sakura = document.createElement('div');
+    sakura.className = 'sakura';
+    sakura.innerHTML = '🌸';
+    sakura.style.left = Math.random() * 100 + '%';
+    sakura.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    sakura.style.animationDelay = Math.random() * 2 + 's';
+    container.appendChild(sakura);
+  }
 }
 
 // 滚动动画
