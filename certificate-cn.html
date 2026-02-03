@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>十社巡礼 · 完走证书</title>
+<title>Ten Shrines · One Journey</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -16,6 +16,18 @@ body {
   background: linear-gradient(180deg, #faf8f5 0%, #f5f0e8 100%);
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* 底纹骑行图标 */
+.bg-bike {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 120px;
+  height: 120px;
+  opacity: 0.08;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* 顶部固定标题 */
@@ -54,6 +66,8 @@ body {
 .content {
   padding-top: 120px;
   padding-bottom: 100px;
+  position: relative;
+  z-index: 1;
 }
 
 /* 上传区域 */
@@ -154,7 +168,7 @@ body {
   padding: 0 20px;
 }
 
-/* SVG曲线路径 */
+/* SVG曲线路径 - 虚线 */
 .path-svg {
   position: absolute;
   left: 0;
@@ -165,21 +179,11 @@ body {
   z-index: 1;
 }
 
-/* 骑行者图标 */
-.cyclist {
-  position: absolute;
-  font-size: 24px;
-  z-index: 10;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
 /* 站点卡片基础 */
 .station-card {
   position: relative;
   margin-bottom: 50px;
-  padding: 20px;
+  padding: 15px;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -195,7 +199,7 @@ body {
   box-shadow: 0 8px 30px rgba(196, 30, 58, 0.15);
 }
 
-/* 奇数站：图标在左，内容在右 */
+/* 奇数站：序号在左，图片在右 */
 .station-card:nth-child(odd) {
   margin-left: 70px;
   margin-right: 10px;
@@ -203,23 +207,24 @@ body {
 
 .station-card:nth-child(odd) .station-number {
   position: absolute;
-  left: -60px;
+  left: -65px;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  background: #c41e3a;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.3);
+  box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
+  border: 3px solid white;
 }
 
-/* 偶数站：内容在左，图标在右 */
+/* 偶数站：图片在左，序号在右 */
 .station-card:nth-child(even) {
   margin-left: 10px;
   margin-right: 70px;
@@ -227,41 +232,28 @@ body {
 
 .station-card:nth-child(even) .station-number {
   position: absolute;
-  right: -60px;
+  right: -65px;
   left: auto;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  background: #8B4513;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
-}
-
-.station-name {
-  font-size: 15px;
-  color: #333;
-  margin-bottom: 12px;
-  font-weight: 600;
-  line-height: 1.4;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
+  border: 3px solid white;
 }
 
 .station-image {
   width: 100%;
   border-radius: 12px;
   display: block;
-}
-
-.station-date {
-  font-size: 13px;
-  color: #888;
-  margin-top: 10px;
 }
 
 /* 底部结语 */
@@ -324,10 +316,10 @@ body {
   }
 
   .station-card:nth-child(odd) .station-number {
-    left: -50px;
-    width: 36px;
-    height: 36px;
-    font-size: 14px;
+    left: -55px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
   }
 
   .station-card:nth-child(even) {
@@ -335,15 +327,30 @@ body {
   }
 
   .station-card:nth-child(even) .station-number {
-    right: -50px;
-    width: 36px;
-    height: 36px;
-    font-size: 14px;
+    right: -55px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  .bg-bike {
+    width: 80px;
+    height: 80px;
   }
 }
 </style>
 </head>
 <body>
+
+<!-- 底纹骑行图标 -->
+<svg class="bg-bike" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="20" cy="70" r="15" stroke="#8B4513" stroke-width="3"/>
+  <circle cx="80" cy="70" r="15" stroke="#8B4513" stroke-width="3"/>
+  <path d="M20 70 L40 40 L70 40 L80 70" stroke="#8B4513" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 40 L35 25 L50 25" stroke="#8B4513" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M55 30 L65 20 L75 25" stroke="#8B4513" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="55" cy="30" r="3" fill="#8B4513"/>
+</svg>
 
 <!-- 上传区域 -->
 <div class="upload-section" id="uploadSection">
@@ -364,8 +371,8 @@ body {
   <!-- 顶部固定标题 -->
   <div class="header">
     <div class="header-icon">⛩️</div>
-    <div class="header-title">十社巡礼 · 一程一印</div>
-    <div class="header-subtitle">完走证书</div>
+    <div class="header-title">Ten Shrines · One Journey</div>
+    <div class="header-subtitle">京都十社巡礼 · 集朱印</div>
   </div>
 
   <!-- 主内容 -->
@@ -379,8 +386,8 @@ body {
     ```
     <!-- 轨迹线 -->
     <div class="journey-path" id="journeyPath">
-      <!-- SVG曲线路径 -->
-      <svg class="path-svg" id="pathSvg" viewBox="0 0 400 2400" preserveAspectRatio="none">
+      <!-- SVG曲线路径 - 虚线 -->
+      <svg class="path-svg" id="pathSvg" viewBox="0 0 400 2200" preserveAspectRatio="none">
         <path id="curvePath" d="M 80,0 
                  C 80,60 320,60 320,120 
                  C 320,180 80,180 80,240
@@ -400,87 +407,64 @@ body {
                  C 320,1860 80,1860 80,1920
                  C 80,1980 320,1980 320,2040
                  C 320,2100 200,2100 200,2160
-                 C 200,2220 200,2280 200,2340
-                 C 200,2400 200,2400 200,2400" 
+                 C 200,2220 200,2220 200,2200" 
               stroke="#c41e3a" 
               stroke-width="3" 
               fill="none" 
-              stroke-dasharray="12,8"
+              stroke-dasharray="8,6"
               stroke-linecap="round"
-              opacity="0.5"/>
+              opacity="0.4"/>
       </svg>
-      
-      <div class="cyclist" id="cyclist">🚲</div>
 
-      <!-- 10个站点卡片 -->
+      <!-- 10个站点卡片 - 只显示图片和序号 -->
       <div class="station-card" data-index="0">
         <div class="station-number">1</div>
-        <div class="station-name">平安神宫<br>Heian Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/fzG9hKJ2/B0031959-81-B0-4-D59-BE9-B-A604-D1-F5-F5-FD.png" alt="平安神宫">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/fzG9hKJ2/B0031959-81-B0-4-D59-BE9-B-A604-D1-F5-F5-FD.png" alt="1">
       </div>
 
       <div class="station-card" data-index="1">
         <div class="station-number">2</div>
-        <div class="station-name">熊野神社<br>Kumano Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/8gNJZ05N/EBCC9-E01-F032-45-D8-8804-9757-BCF014-F0.png" alt="熊野神社">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/8gNJZ05N/EBCC9-E01-F032-45-D8-8804-9757-BCF014-F0.png" alt="2">
       </div>
 
       <div class="station-card" data-index="2">
         <div class="station-number">3</div>
-        <div class="station-name">下御灵神社<br>Shimogoryo Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/BDRvzsQ/F8-E25-DE0-7408-409-C-90-CF-22-E2-E34-A33-F6.png" alt="下御灵神社">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/BDRvzsQ/F8-E25-DE0-7408-409-C-90-CF-22-E2-E34-A33-F6.png" alt="3">
       </div>
 
       <div class="station-card" data-index="3">
         <div class="station-number">4</div>
-        <div class="station-name">御金神社<br>Mikane Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/sdx9TdXZ/938425-DB-3-DD3-4-DAE-AEB7-E1638-B122849.png" alt="御金神社">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/sdx9TdXZ/938425-DB-3-DD3-4-DAE-AEB7-E1638-B122849.png" alt="4">
       </div>
 
       <div class="station-card" data-index="4">
         <div class="station-number">5</div>
-        <div class="station-name">菅原院天满宫<br>Sugawarain Tanmangu</div>
-        <img class="station-image" src="https://i.ibb.co/fzC1ZxCV/IMG-3194.png" alt="菅原院天满宫">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/fzC1ZxCV/IMG-3194.png" alt="5">
       </div>
 
       <div class="station-card" data-index="5">
         <div class="station-number">6</div>
-        <div class="station-name">护王神社<br>Goou Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/kVJXgrt6/734-E9-F41-0-DF1-4-CD3-90-CA-2-E789-D96-D496.png" alt="护王神社">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/kVJXgrt6/734-E9-F41-0-DF1-4-CD3-90-CA-2-E789-D96-D496.png" alt="6">
       </div>
 
       <div class="station-card" data-index="6">
         <div class="station-number">7</div>
-        <div class="station-name">京都御所<br>Kyoto Imperial Palace</div>
-        <img class="station-image" src="https://i.ibb.co/SwpFg3Xs/01979-EEF-380-B-4-D94-8-E0-F-698-EA7-B38980.png" alt="京都御所">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/SwpFg3Xs/01979-EEF-380-B-4-D94-8-E0-F-698-EA7-B38980.png" alt="7">
       </div>
 
       <div class="station-card" data-index="7">
         <div class="station-number">8</div>
-        <div class="station-name">梨木神社<br>Nashinoki Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/20tn7nSJ/D7-FA715-F-F1-DA-4259-9-C60-1207-A5-C4-D557.png" alt="梨木神社">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/20tn7nSJ/D7-FA715-F-F1-DA-4259-9-C60-1207-A5-C4-D557.png" alt="8">
       </div>
 
       <div class="station-card" data-index="8">
         <div class="station-number">9</div>
-        <div class="station-name">河合神社<br>Kawai Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/zTCR1x0X/IMG-3179.png" alt="河合神社">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/zTCR1x0X/IMG-3179.png" alt="9">
       </div>
 
       <div class="station-card" data-index="9">
         <div class="station-number">10</div>
-        <div class="station-name">下鸭神社<br>Shimogamo Shrine</div>
-        <img class="station-image" src="https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png" alt="下鸭神社">
-        <div class="station-date">2026.02.02</div>
+        <img class="station-image" src="https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png" alt="10">
       </div>
     </div>
 
@@ -568,7 +552,6 @@ function generateCertificate() {
 // 滚动动画
 function initAnimation() {
   const path = document.getElementById('curvePath');
-  const cyclist = document.getElementById('cyclist');
   const cards = document.querySelectorAll('.station-card');
   const visitorPhoto = document.querySelector('.visitor-photo');
   let pathLength = 0;
@@ -578,20 +561,6 @@ function initAnimation() {
     pathLength = path.getTotalLength();
     path.style.strokeDasharray = pathLength;
     path.style.strokeDashoffset = pathLength;
-  }
-  
-  // 获取SVG坐标
-  function getPointAtLength(length) {
-    const svg = document.getElementById('pathSvg');
-    const point = path.getPointAtLength(length);
-    const svgRect = svg.getBoundingClientRect();
-    const scaleX = svgRect.width / 400;
-    const scaleY = svgRect.height / 2400;
-    
-    return {
-      x: point.x * scaleX,
-      y: point.y * scaleY
-    };
   }
   
   // 滚动处理
@@ -611,20 +580,9 @@ function initAnimation() {
       visitorPhoto.style.opacity = '1';
     }
     
-    // 绘制路径
+    // 绘制路径（虚线逐渐显示）
     const currentLength = pathLength * scrollProgress;
     path.style.strokeDashoffset = pathLength - currentLength;
-    
-    // 骑行者跟随
-    if (pathLength > 0) {
-      const point = getPointAtLength(currentLength);
-      cyclist.style.left = (point.x - 12) + 'px';
-      cyclist.style.top = point.y + 'px';
-      
-      // 根据站点翻转骑行者
-      const activeIndex = Math.floor(scrollProgress * 10);
-      cyclist.style.transform = activeIndex % 2 === 0 ? 'scaleX(1)' : 'scaleX(-1)';
-    }
     
     // 卡片逐个亮起
     cards.forEach((card) => {
