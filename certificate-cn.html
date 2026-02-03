@@ -18,7 +18,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 樱花动画 */
+/* 樱花动画 - 更慢更有意境 */
 .sakura {
   position: fixed;
   top: -10%;
@@ -558,14 +558,14 @@ function generateCertificate() {
   
   document.getElementById('certNumber').textContent = certNumber;
   
-  // 创建樱花动画
+  // 创建樱花动画 - 更慢更有意境
   createSakura();
   
   // 初始化滚动动画
   initAnimation();
 }
 
-// 创建樱花
+// 创建樱花 - 速度改为4-8秒
 function createSakura() {
   const container = document.getElementById('sakuraContainer');
   for (let i = 0; i < 15; i++) {
@@ -573,8 +573,8 @@ function createSakura() {
     sakura.className = 'sakura';
     sakura.innerHTML = '🌸';
     sakura.style.left = Math.random() * 100 + '%';
-    sakura.style.animationDuration = (Math.random() * 3 + 2) + 's';
-    sakura.style.animationDelay = Math.random() * 2 + 's';
+    sakura.style.animationDuration = (Math.random() * 4 + 4) + 's'; // 4-8秒
+    sakura.style.animationDelay = Math.random() * 3 + 's';
     container.appendChild(sakura);
   }
 }
