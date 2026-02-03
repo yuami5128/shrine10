@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>十社巡礼 · 完走证书</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(180deg, #faf8f5 0%, #f5f0e8 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 顶部固定标题 */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(250, 248, 245, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  text-align: center;
+  z-index: 100;
+  border-bottom: 1px solid rgba(196, 30, 58, 0.1);
+}
+
+.header-icon {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.header-title {
+  font-size: 20px;
+  color: #8B0000;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #666;
+  margin-top: 3px;
+}
+
+/* 主内容区 */
+.content {
+  padding-top: 120px;
+  padding-bottom: 100px;
+}
+
+/* 上传区域 */
+.upload-section {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.upload-box {
+  border: 3px dashed #c41e3a;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  background: white;
+  margin-bottom: 20px;
+}
+
+.upload-text {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.upload-btn {
+  background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%);
+  color: white;
+  padding: 15px 40px;
+  border-radius: 12px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.preview-img {
+  max-width: 100%;
+  margin-top: 20px;
+  border-radius: 12px;
+  display: none;
+}
+
+.generate-btn {
+  display: none;
+  margin-top: 20px;
+}
+
+/* 10个朱印预览网格 */
+.stamps-preview {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.stamp-thumb {
+  width: 100%;
+  border-radius: 6px;
+}
+
+/* 证书内容（生成后显示） */
+.certificate-content {
+  display: none;
+}
+
+/* 游客照片区域 */
+.hero-section {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.visitor-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #c41e3a;
+  box-shadow: 0 10px 30px rgba(196, 30, 58, 0.2);
+  transition: all 0.5s ease;
+}
+
+.visitor-name {
+  font-size: 28px;
+  color: #c41e3a;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+/* 轨迹线容器 */
+.journey-path {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* SVG曲线路径 */
+.path-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 骑行者图标 */
+.cyclist {
+  position: absolute;
+  font-size: 24px;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* 站点卡片基础 */
+.station-card {
+  position: relative;
+  margin-bottom: 50px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  opacity: 0.3;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+  z-index: 5;
+}
+
+.station-card.active {
+  opacity: 1;
+  transform: translateY(0);
+  box-shadow: 0 8px 30px rgba(196, 30, 58, 0.15);
+}
+
+/* 奇数站：图标在左，内容在右 */
+.station-card:nth-child(odd) {
+  margin-left: 70px;
+  margin-right: 10px;
+}
+
+.station-card:nth-child(odd) .station-number {
+  position: absolute;
+  left: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: #c41e3a;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(196, 30, 58, 0.3);
+}
+
+/* 偶数站：内容在左，图标在右 */
+.station-card:nth-child(even) {
+  margin-left: 10px;
+  margin-right: 70px;
+}
+
+.station-card:nth-child(even) .station-number {
+  position: absolute;
+  right: -60px;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: #8B4513;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+}
+
+.station-name {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.station-image {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+.station-date {
+  font-size: 13px;
+  color: #888;
+  margin-top: 10px;
+}
+
+/* 底部结语 */
+.footer {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(180deg, transparent 0%, rgba(196, 30, 58, 0.05) 100%);
+}
+
+.footer-seal {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.footer-title {
+  font-size: 24px;
+  color: #8B0000;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.cert-info {
+  font-size: 12px;
+  color: #999;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  line-height: 1.8;
+}
+
+/* 分享提示 */
+.share-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+/* 响应式 */
+@media (max-width: 400px) {
+  .visitor-photo {
+    width: 160px;
+    height: 160px;
+  }
+
+  .station-card:nth-child(odd) {
+    margin-left: 55px;
+  }
+
+  .station-card:nth-child(odd) .station-number {
+    left: -50px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .station-card:nth-child(even) {
+    margin-right: 55px;
+  }
+
+  .station-card:nth-child(even) .station-number {
+    right: -50px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- 上传区域 -->
+<div class="upload-section" id="uploadSection">
+  <div class="stamps-preview" id="stampsPreview"></div>
+  
+  <div class="upload-box">
+    <div class="upload-text">上传照片生成证书</div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+    <button class="upload-btn" onclick="document.getElementById('photoInput').click()">📷 选择照片</button>
+    <img id="preview" class="preview-img">
+    <button class="upload-btn generate-btn" id="generateBtn" onclick="generateCertificate()">✨ 生成证书</button>
+  </div>
+</div>
+
+<!-- 证书内容（生成后显示） -->
+<div class="certificate-content" id="certificateContent">
+
+  <!-- 顶部固定标题 -->
+  <div class="header">
+    <div class="header-icon">⛩️</div>
+    <div class="header-title">十社巡礼 · 一程一印</div>
+    <div class="header-subtitle">完走证书</div>
+  </div>
+
+  <!-- 主内容 -->
+  <div class="content">
+    <!-- 游客照片 -->
+    <div class="hero-section" id="heroSection">
+      <img id="visitorPhoto" class="visitor-photo" src="" alt="游客照片">
+      <div class="visitor-name" id="visitorName"></div>
+    </div>
+
+    ```
+    <!-- 轨迹线 -->
+    <div class="journey-path" id="journeyPath">
+      <!-- SVG曲线路径 -->
+      <svg class="path-svg" id="pathSvg" viewBox="0 0 400 2400" preserveAspectRatio="none">
+        <path id="curvePath" d="M 80,0 
+                 C 80,60 320,60 320,120 
+                 C 320,180 80,180 80,240
+                 C 80,300 320,300 320,360
+                 C 320,420 80,420 80,480
+                 C 80,540 320,540 320,600
+                 C 320,660 80,660 80,720
+                 C 80,780 320,780 320,840
+                 C 320,900 80,900 80,960
+                 C 80,1020 320,1020 320,1080
+                 C 320,1140 80,1140 80,1200
+                 C 80,1260 320,1260 320,1320
+                 C 320,1380 80,1380 80,1440
+                 C 80,1500 320,1500 320,1560
+                 C 320,1620 80,1620 80,1680
+                 C 80,1740 320,1740 320,1800
+                 C 320,1860 80,1860 80,1920
+                 C 80,1980 320,1980 320,2040
+                 C 320,2100 200,2100 200,2160
+                 C 200,2220 200,2280 200,2340
+                 C 200,2400 200,2400 200,2400" 
+              stroke="#c41e3a" 
+              stroke-width="3" 
+              fill="none" 
+              stroke-dasharray="12,8"
+              stroke-linecap="round"
+              opacity="0.5"/>
+      </svg>
+      
+      <div class="cyclist" id="cyclist">🚲</div>
+
+      <!-- 10个站点卡片 -->
+      <div class="station-card" data-index="0">
+        <div class="station-number">1</div>
+        <div class="station-name">平安神宫<br>Heian Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/fzG9hKJ2/B0031959-81-B0-4-D59-BE9-B-A604-D1-F5-F5-FD.png" alt="平安神宫">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="1">
+        <div class="station-number">2</div>
+        <div class="station-name">熊野神社<br>Kumano Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/8gNJZ05N/EBCC9-E01-F032-45-D8-8804-9757-BCF014-F0.png" alt="熊野神社">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="2">
+        <div class="station-number">3</div>
+        <div class="station-name">下御灵神社<br>Shimogoryo Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/BDRvzsQ/F8-E25-DE0-7408-409-C-90-CF-22-E2-E34-A33-F6.png" alt="下御灵神社">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="3">
+        <div class="station-number">4</div>
+        <div class="station-name">御金神社<br>Mikane Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/sdx9TdXZ/938425-DB-3-DD3-4-DAE-AEB7-E1638-B122849.png" alt="御金神社">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="4">
+        <div class="station-number">5</div>
+        <div class="station-name">菅原院天满宫<br>Sugawarain Tanmangu</div>
+        <img class="station-image" src="https://i.ibb.co/fzC1ZxCV/IMG-3194.png" alt="菅原院天满宫">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="5">
+        <div class="station-number">6</div>
+        <div class="station-name">护王神社<br>Goou Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/kVJXgrt6/734-E9-F41-0-DF1-4-CD3-90-CA-2-E789-D96-D496.png" alt="护王神社">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="6">
+        <div class="station-number">7</div>
+        <div class="station-name">京都御所<br>Kyoto Imperial Palace</div>
+        <img class="station-image" src="https://i.ibb.co/SwpFg3Xs/01979-EEF-380-B-4-D94-8-E0-F-698-EA7-B38980.png" alt="京都御所">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="7">
+        <div class="station-number">8</div>
+        <div class="station-name">梨木神社<br>Nashinoki Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/20tn7nSJ/D7-FA715-F-F1-DA-4259-9-C60-1207-A5-C4-D557.png" alt="梨木神社">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="8">
+        <div class="station-number">9</div>
+        <div class="station-name">河合神社<br>Kawai Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/zTCR1x0X/IMG-3179.png" alt="河合神社">
+        <div class="station-date">2026.02.02</div>
+      </div>
+
+      <div class="station-card" data-index="9">
+        <div class="station-number">10</div>
+        <div class="station-name">下鸭神社<br>Shimogamo Shrine</div>
+        <img class="station-image" src="https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png" alt="下鸭神社">
+        <div class="station-date">2026.02.02</div>
+      </div>
+    </div>
+
+    <!-- 底部结语 -->
+    <div class="footer">
+      <div class="footer-seal">⛩️</div>
+      <div class="footer-title">十社骑行达成</div>
+      <div class="footer-subtitle">Ten Shrines Pilgrimage Completed</div>
+      <div class="cert-info" id="certInfo"></div>
+    </div>
+
+    ```
+
+  </div>
+
+  <!-- 分享提示 -->
+  <div class="share-hint">📸 截图保存纪念</div>
+
+</div>
+
+<script>
+// 10个朱印图片
+const shrineImages = [
+  "https://i.ibb.co/fzG9hKJ2/B0031959-81-B0-4-D59-BE9-B-A604-D1-F5-F5-FD.png",
+  "https://i.ibb.co/8gNJZ05N/EBCC9-E01-F032-45-D8-8804-9757-BCF014-F0.png",
+  "https://i.ibb.co/BDRvzsQ/F8-E25-DE0-7408-409-C-90-CF-22-E2-E34-A33-F6.png",
+  "https://i.ibb.co/sdx9TdXZ/938425-DB-3-DD3-4-DAE-AEB7-E1638-B122849.png",
+  "https://i.ibb.co/fzC1ZxCV/IMG-3194.png",
+  "https://i.ibb.co/kVJXgrt6/734-E9-F41-0-DF1-4-CD3-90-CA-2-E789-D96-D496.png",
+  "https://i.ibb.co/SwpFg3Xs/01979-EEF-380-B-4-D94-8-E0-F-698-EA7-B38980.png",
+  "https://i.ibb.co/20tn7nSJ/D7-FA715-F-F1-DA-4259-9-C60-1207-A5-C4-D557.png",
+  "https://i.ibb.co/zTCR1x0X/IMG-3179.png",
+  "https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png"
+];
+
+// 获取URL参数
+const urlParams = new URLSearchParams(window.location.search);
+const visitorName = urlParams.get('name') || 'Visitor';
+
+// 上传页显示10个朱印缩略图
+const previewGrid = document.getElementById('stampsPreview');
+shrineImages.forEach(src => {
+  const img = document.createElement('img');
+  img.src = src;
+  img.className = 'stamp-thumb';
+  previewGrid.appendChild(img);
+});
+
+// 照片上传预览
+document.getElementById('photoInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('preview').src = e.target.result;
+      document.getElementById('preview').style.display = 'block';
+      document.getElementById('generateBtn').style.display = 'inline-block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// 生成证书
+function generateCertificate() {
+  // 隐藏上传区，显示证书
+  document.getElementById('uploadSection').style.display = 'none';
+  document.getElementById('certificateContent').style.display = 'block';
+  
+  // 设置游客信息
+  document.getElementById('visitorName').textContent = visitorName;
+  document.getElementById('visitorPhoto').src = document.getElementById('preview').src;
+  
+  // 生成证书信息
+  const today = new Date();
+  const dateStr = today.getFullYear() + '.' + String(today.getMonth()+1).padStart(2,'0') + '.' + String(today.getDate()).padStart(2,'0');
+  const randomStr = Math.random().toString(36).substr(2, 6).toUpperCase();
+  const certNumber = 'NO. KYOTO-' + dateStr.replace(/\./g, '') + '-' + randomStr;
+  
+  document.getElementById('certInfo').innerHTML = certNumber + '<br>' + dateStr;
+  
+  // 初始化动画
+  initAnimation();
+}
+
+// 滚动动画
+function initAnimation() {
+  const path = document.getElementById('curvePath');
+  const cyclist = document.getElementById('cyclist');
+  const cards = document.querySelectorAll('.station-card');
+  const visitorPhoto = document.querySelector('.visitor-photo');
+  let pathLength = 0;
+  
+  // 获取路径长度
+  function initPath() {
+    pathLength = path.getTotalLength();
+    path.style.strokeDasharray = pathLength;
+    path.style.strokeDashoffset = pathLength;
+  }
+  
+  // 获取SVG坐标
+  function getPointAtLength(length) {
+    const svg = document.getElementById('pathSvg');
+    const point = path.getPointAtLength(length);
+    const svgRect = svg.getBoundingClientRect();
+    const scaleX = svgRect.width / 400;
+    const scaleY = svgRect.height / 2400;
+    
+    return {
+      x: point.x * scaleX,
+      y: point.y * scaleY
+    };
+  }
+  
+  // 滚动处理
+  function onScroll() {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const docHeight = document.body.scrollHeight - windowHeight;
+    const scrollProgress = Math.min(scrollY / docHeight, 1);
+    
+    // 照片缩小效果
+    if (scrollY > 100) {
+      const scale = Math.max(0.6, 1 - (scrollY - 100) / 400);
+      visitorPhoto.style.transform = `scale(${scale})`;
+      visitorPhoto.style.opacity = Math.max(0.3, 1 - (scrollY - 100) / 300);
+    } else {
+      visitorPhoto.style.transform = 'scale(1)';
+      visitorPhoto.style.opacity = '1';
+    }
+    
+    // 绘制路径
+    const currentLength = pathLength * scrollProgress;
+    path.style.strokeDashoffset = pathLength - currentLength;
+    
+    // 骑行者跟随
+    if (pathLength > 0) {
+      const point = getPointAtLength(currentLength);
+      cyclist.style.left = (point.x - 12) + 'px';
+      cyclist.style.top = point.y + 'px';
+      
+      // 根据站点翻转骑行者
+      const activeIndex = Math.floor(scrollProgress * 10);
+      cyclist.style.transform = activeIndex % 2 === 0 ? 'scaleX(1)' : 'scaleX(-1)';
+    }
+    
+    // 卡片逐个亮起
+    cards.forEach((card) => {
+      const rect = card.getBoundingClientRect();
+      if (rect.top < windowHeight * 0.6) {
+        card.classList.add('active');
+      }
+    });
+  }
+  
+  // 初始化
+  initPath();
+  onScroll();
+  window.addEventListener('scroll', onScroll);
+}
+</script>
+
+</body>
+</html>
