@@ -1,174 +1,640 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Certificate - Ten Shrines</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-      background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
-      min-height: 100vh; padding: 20px;
-    }
-    .container { max-width: 500px; margin: 0 auto; }
-    h1 { text-align: center; color: #8B0000; margin-bottom: 5px; font-size: 20px; }
-    .subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 25px; }
-    
-    .upload-area {
-      border: 3px dashed #c41e3a; border-radius: 16px; padding: 40px;
-      text-align: center; background: white; margin-bottom: 20px;
-    }
-    .upload-btn {
-      background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%);
-      color: white; padding: 15px 40px; border-radius: 12px;
-      border: none; font-size: 18px; font-weight: 600; cursor: pointer;
-    }
-    #preview { max-width: 100%; margin-top: 20px; border-radius: 8px; display: none; }
-    
-    .stamps-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
-      margin-bottom: 30px; padding: 15px; background: white;
-      border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .stamp-thumb { width: 100%; border-radius: 6px; }
-    
-    .certificate {
-      background: white; padding: 30px 20px; border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center;
-      max-width: 400px; margin: 0 auto; border: 3px solid #c41e3a;
-      display: none;
-    }
-    .cert-icon { font-size: 40px; margin-bottom: 10px; }
-    .cert-title { font-size: 22px; color: #8B0000; margin-bottom: 5px; font-weight: bold; }
-    .cert-subtitle { color: #666; font-size: 13px; margin-bottom: 20px; }
-    
-    .cert-photo {
-      width: 180px; height: 180px; object-fit: cover;
-      border-radius: 50%; border: 4px solid #c41e3a;
-      margin: 0 auto 20px; display: block;
-    }
-    .cert-name { font-size: 32px; color: #c41e3a; margin: 15px 0; font-weight: bold; }
-    
-    .cert-stamps-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
-      margin: 20px auto; max-width: 320px; padding: 12px;
-      background: #f8f8f8; border-radius: 12px;
-    }
-    .cert-stamp-thumb { width: 100%; border-radius: 6px; }
-    
-    .cert-date { color: #888; margin-top: 15px; font-size: 14px; }
-    .cert-seal { font-size: 36px; margin-top: 10px; }
-    
-    .sakura {
-      position: fixed; top: -10%; font-size: 24px; 
-      animation: fall linear infinite; pointer-events: none;
-    }
-    @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate - Ten Shrines</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #faf8f5 0%, #f5f0e8 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 樱花动画 */
+.sakura {
+  position: fixed;
+  top: -10%;
+  font-size: 20px;
+  animation: fall linear infinite;
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 50;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
+/* 底纹骑行图标 */
+.bg-bike {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 120px;
+  height: 120px;
+  opacity: 0.08;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 顶部固定标题 */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(250, 248, 245, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  text-align: center;
+  z-index: 100;
+  border-bottom: 1px solid rgba(196, 30, 58, 0.1);
+}
+
+.header-icon {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.header-title {
+  font-size: 20px;
+  color: #8B0000;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #666;
+  margin-top: 3px;
+}
+
+/* 主内容区 */
+.content {
+  padding-top: 160px;
+  padding-bottom: 100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 上传区域 */
+.upload-section {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.upload-box {
+  border: 3px dashed #c41e3a;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  background: white;
+  margin-bottom: 20px;
+}
+
+.upload-text {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.upload-btn {
+  background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%);
+  color: white;
+  padding: 15px 40px;
+  border-radius: 12px;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.preview-img {
+  max-width: 100%;
+  margin-top: 20px;
+  border-radius: 12px;
+  display: none;
+}
+
+.generate-btn {
+  display: none;
+  margin-top: 20px;
+}
+
+/* 10个朱印预览网格 */
+.stamps-preview {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.stamp-thumb {
+  width: 100%;
+  border-radius: 6px;
+}
+
+/* 证书内容（生成后显示） */
+.certificate-content {
+  display: none;
+}
+
+/* 游客照片区域 */
+.hero-section {
+  text-align: center;
+  padding: 40px 20px;
+  padding-top: 60px;
+}
+
+.visitor-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #c41e3a;
+  box-shadow: 0 10px 30px rgba(196, 30, 58, 0.2);
+  transition: all 0.5s ease;
+}
+
+.visitor-name {
+  font-size: 28px;
+  color: #c41e3a;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+/* 轨迹线容器 */
+.journey-path {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* SVG曲线路径 - 虚线 */
+.path-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 站点卡片基础 */
+.station-card {
+  position: relative;
+  margin-bottom: 50px;
+  padding: 15px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  opacity: 0.3;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+  z-index: 5;
+}
+
+.station-card.active {
+  opacity: 1;
+  transform: translateY(0);
+  box-shadow: 0 8px 30px rgba(196, 30, 58, 0.15);
+}
+
+/* 奇数站：序号在左，图片在右 */
+.station-card:nth-child(odd) {
+  margin-left: 70px;
+  margin-right: 10px;
+}
+
+.station-card:nth-child(odd) .station-number {
+  position: absolute;
+  left: -65px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #c41e3a 0%, #8B0000 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
+  border: 3px solid white;
+}
+
+/* 偶数站：图片在左，序号在右 */
+.station-card:nth-child(even) {
+  margin-left: 10px;
+  margin-right: 70px;
+}
+
+.station-card:nth-child(even) .station-number {
+  position: absolute;
+  right: -65px;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
+  border: 3px solid white;
+}
+
+.station-image {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+/* 底部结语 */
+.footer {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(180deg, transparent 0%, rgba(196, 30, 58, 0.05) 100%);
+}
+
+.footer-seal {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.footer-title {
+  font-size: 24px;
+  color: #8B0000;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.cert-number {
+  font-size: 14px;
+  color: #666;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  margin-top: 15px;
+}
+
+/* 分享提示 */
+.share-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+/* 响应式 */
+@media (max-width: 400px) {
+  .content {
+    padding-top: 180px;
+  }
+  
+  .hero-section {
+    padding-top: 80px;
+  }
+  
+  .visitor-photo {
+    width: 160px;
+    height: 160px;
+  }
+
+  .station-card:nth-child(odd) {
+    margin-left: 55px;
+  }
+
+  .station-card:nth-child(odd) .station-number {
+    left: -55px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+
+  .station-card:nth-child(even) {
+    margin-right: 55px;
+  }
+
+  .station-card:nth-child(even) .station-number {
+    right: -55px;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  .bg-bike {
+    width: 80px;
+    height: 80px;
+  }
+}
+</style>
 </head>
 <body>
-  <div class="container" id="uploadSection">
-    <h1>🏆 Your Journey Complete!</h1>
-    <div class="stamps-grid" id="stampsGrid"></div>
-    <div class="upload-area">
-      <p style="color: #666; margin-bottom: 20px;">Upload your photo to generate certificate</p>
-      <input type="file" id="photoInput" accept="image/*" style="display:none;">
-      <button class="upload-btn" onclick="document.getElementById('photoInput').click()">📷 Select Photo</button>
-      <img id="preview">
-      <br><br>
-      <button class="upload-btn" id="generateBtn" style="display:none;" onclick="generate()">✨ Generate Certificate</button>
+
+<!-- 樱花容器 -->
+<div id="sakuraContainer"></div>
+
+<!-- 底纹骑行图标 -->
+<svg class="bg-bike" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="20" cy="70" r="15" stroke="#8B4513" stroke-width="3"/>
+  <circle cx="80" cy="70" r="15" stroke="#8B4513" stroke-width="3"/>
+  <path d="M20 70 L40 40 L70 40 L80 70" stroke="#8B4513" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 40 L35 25 L50 25" stroke="#8B4513" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M55 30 L65 20 L75 25" stroke="#8B4513" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="55" cy="30" r="3" fill="#8B4513"/>
+</svg>
+
+<!-- 上传区域 -->
+<div class="upload-section" id="uploadSection">
+  <div class="stamps-preview" id="stampsPreview"></div>
+  
+  <div class="upload-box">
+    <div class="upload-text">Upload your photo to generate certificate</div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none;">
+    <button class="upload-btn" onclick="document.getElementById('photoInput').click()">📷 Select Photo</button>
+    <img id="preview" class="preview-img">
+    <button class="upload-btn generate-btn" id="generateBtn" onclick="generateCertificate()">✨ Generate Certificate</button>
+  </div>
+</div>
+
+<!-- 证书内容（生成后显示） -->
+<div class="certificate-content" id="certificateContent">
+
+  <!-- 顶部固定标题 -->
+  <div class="header">
+    <div class="header-icon">⛩️</div>
+    <div class="header-title">Ten Shrines · One Journey</div>
+    <div class="header-subtitle">Certificate of Completion</div>
+  </div>
+
+  <!-- 主内容 -->
+  <div class="content">
+    <!-- 游客照片 -->
+    <div class="hero-section" id="heroSection">
+      <img id="visitorPhoto" class="visitor-photo" src="" alt="Visitor Photo">
+      <div class="visitor-name" id="visitorName"></div>
     </div>
+
+    <!-- 轨迹线 -->
+    <div class="journey-path" id="journeyPath">
+      <!-- SVG曲线路径 - 虚线 -->
+      <svg class="path-svg" id="pathSvg" viewBox="0 0 400 2200" preserveAspectRatio="none">
+        <path id="curvePath" d="M 80,0 
+                 C 80,60 320,60 320,120 
+                 C 320,180 80,180 80,240
+                 C 80,300 320,300 320,360
+                 C 320,420 80,420 80,480
+                 C 80,540 320,540 320,600
+                 C 320,660 80,660 80,720
+                 C 80,780 320,780 320,840
+                 C 320,900 80,900 80,960
+                 C 80,1020 320,1020 320,1080
+                 C 320,1140 80,1140 80,1200
+                 C 80,1260 320,1260 320,1320
+                 C 320,1380 80,1380 80,1440
+                 C 80,1500 320,1500 320,1560
+                 C 320,1620 80,1620 80,1680
+                 C 80,1740 320,1740 320,1800
+                 C 320,1860 80,1860 80,1920
+                 C 80,1980 320,1980 320,2040
+                 C 320,2100 200,2100 200,2160
+                 C 200,2220 200,2220 200,2200" 
+              stroke="#c41e3a" 
+              stroke-width="3" 
+              fill="none" 
+              stroke-dasharray="8,6"
+              stroke-linecap="round"
+              opacity="0.4"/>
+      </svg>
+
+      <!-- 10个站点卡片 -->
+      <div class="station-card" data-index="0">
+        <div class="station-number">1</div>
+        <img class="station-image" src="https://i.ibb.co/fzG9hKJ2/B0031959-81-B0-4-D59-BE9-B-A604-D1-F5-F5-FD.png" alt="1">
+      </div>
+
+      <div class="station-card" data-index="1">
+        <div class="station-number">2</div>
+        <img class="station-image" src="https://i.ibb.co/8gNJZ05N/EBCC9-E01-F032-45-D8-8804-9757-BCF014-F0.png" alt="2">
+      </div>
+
+      <div class="station-card" data-index="2">
+        <div class="station-number">3</div>
+        <img class="station-image" src="https://i.ibb.co/BDRvzsQ/F8-E25-DE0-7408-409-C-90-CF-22-E2-E34-A33-F6.png" alt="3">
+      </div>
+
+      <div class="station-card" data-index="3">
+        <div class="station-number">4</div>
+        <img class="station-image" src="https://i.ibb.co/sdx9TdXZ/938425-DB-3-DD3-4-DAE-AEB7-E1638-B122849.png" alt="4">
+      </div>
+
+      <div class="station-card" data-index="4">
+        <div class="station-number">5</div>
+        <img class="station-image" src="https://i.ibb.co/fzC1ZxCV/IMG-3194.png" alt="5">
+      </div>
+
+      <div class="station-card" data-index="5">
+        <div class="station-number">6</div>
+        <img class="station-image" src="https://i.ibb.co/kVJXgrt6/734-E9-F41-0-DF1-4-CD3-90-CA-2-E789-D96-D496.png" alt="6">
+      </div>
+
+      <div class="station-card" data-index="6">
+        <div class="station-number">7</div>
+        <img class="station-image" src="https://i.ibb.co/SwpFg3Xs/01979-EEF-380-B-4-D94-8-E0-F-698-EA7-B38980.png" alt="7">
+      </div>
+
+      <div class="station-card" data-index="7">
+        <div class="station-number">8</div>
+        <img class="station-image" src="https://i.ibb.co/20tn7nSJ/D7-FA715-F-F1-DA-4259-9-C60-1207-A5-C4-D557.png" alt="8">
+      </div>
+
+      <div class="station-card" data-index="8">
+        <div class="station-number">9</div>
+        <img class="station-image" src="https://i.ibb.co/zTCR1x0X/IMG-3179.png" alt="9">
+      </div>
+
+      <div class="station-card" data-index="9">
+        <div class="station-number">10</div>
+        <img class="station-image" src="https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png" alt="10">
+      </div>
+    </div>
+
+    <!-- 底部结语 -->
+    <div class="footer">
+      <div class="footer-seal">⛩️</div>
+      <div class="footer-title">Ten Shrines · One Journey</div>
+      <div class="cert-number" id="certNumber"></div>
+    </div>
+
   </div>
 
-  <div class="certificate" id="certificateSection">
-    <div class="cert-icon">⛩️</div>
-    <div class="cert-title">Ten Shrines · One Journey</div>
-    <div class="cert-subtitle">Certificate of Completion</div>
-    
-    <img id="certPhoto" class="cert-photo">
-    <div class="cert-name" id="certName"></div>
-    
-    <div class="cert-stamps-grid" id="certStamps"></div>
-    
-    <div class="cert-date" id="certDate"></div>
-    <div class="cert-seal">🌸</div>
-  </div>
+  <!-- 分享提示 -->
+  <div class="share-hint">📸 Screenshot to save your memory</div>
 
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get('name') || 'Visitor';
+</div>
+
+<script>
+// 10个朱印图片
+const shrineImages = [
+  "https://i.ibb.co/fzG9hKJ2/B0031959-81-B0-4-D59-BE9-B-A604-D1-F5-F5-FD.png",
+  "https://i.ibb.co/8gNJZ05N/EBCC9-E01-F032-45-D8-8804-9757-BCF014-F0.png",
+  "https://i.ibb.co/BDRvzsQ/F8-E25-DE0-7408-409-C-90-CF-22-E2-E34-A33-F6.png",
+  "https://i.ibb.co/sdx9TdXZ/938425-DB-3-DD3-4-DAE-AEB7-E1638-B122849.png",
+  "https://i.ibb.co/fzC1ZxCV/IMG-3194.png",
+  "https://i.ibb.co/kVJXgrt6/734-E9-F41-0-DF1-4-CD3-90-CA-2-E789-D96-D496.png",
+  "https://i.ibb.co/SwpFg3Xs/01979-EEF-380-B-4-D94-8-E0-F-698-EA7-B38980.png",
+  "https://i.ibb.co/20tn7nSJ/D7-FA715-F-F1-DA-4259-9-C60-1207-A5-C4-D557.png",
+  "https://i.ibb.co/zTCR1x0X/IMG-3179.png",
+  "https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png"
+];
+
+// 获取URL参数
+const urlParams = new URLSearchParams(window.location.search);
+const visitorName = urlParams.get('name') || 'Visitor';
+
+// 上传页显示10个朱印缩略图
+const previewGrid = document.getElementById('stampsPreview');
+shrineImages.forEach(src => {
+  const img = document.createElement('img');
+  img.src = src;
+  img.className = 'stamp-thumb';
+  previewGrid.appendChild(img);
+});
+
+// 照片上传预览
+document.getElementById('photoInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('preview').src = e.target.result;
+      document.getElementById('preview').style.display = 'block';
+      document.getElementById('generateBtn').style.display = 'inline-block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// 生成证书
+function generateCertificate() {
+  // 隐藏上传区，显示证书
+  document.getElementById('uploadSection').style.display = 'none';
+  document.getElementById('certificateContent').style.display = 'block';
+  
+  // 设置游客信息
+  document.getElementById('visitorName').textContent = visitorName;
+  document.getElementById('visitorPhoto').src = document.getElementById('preview').src;
+  
+  // 生成证书号
+  const today = new Date();
+  const dateStr = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
+  const pinyin = visitorName.replace(/\s+/g, '');
+  const certNumber = 'No. KYOTO-' + dateStr + '-' + pinyin;
+  
+  document.getElementById('certNumber').textContent = certNumber;
+  
+  // 创建樱花动画
+  createSakura();
+  
+  // 初始化滚动动画
+  initAnimation();
+}
+
+// 创建樱花
+function createSakura() {
+  const container = document.getElementById('sakuraContainer');
+  for (let i = 0; i < 15; i++) {
+    const sakura = document.createElement('div');
+    sakura.className = 'sakura';
+    sakura.innerHTML = '🌸';
+    sakura.style.left = Math.random() * 100 + '%';
+    sakura.style.animationDuration = (Math.random() * 7 + 8) + 's';
+    sakura.style.animationDelay = Math.random() * 5 + 's';
+    container.appendChild(sakura);
+  }
+}
+
+// 滚动动画
+function initAnimation() {
+  const path = document.getElementById('curvePath');
+  const cards = document.querySelectorAll('.station-card');
+  const visitorPhoto = document.querySelector('.visitor-photo');
+  let pathLength = 0;
+  
+  // 获取路径长度
+  function initPath() {
+    pathLength = path.getTotalLength();
+    path.style.strokeDasharray = pathLength;
+    path.style.strokeDashoffset = pathLength;
+  }
+  
+  // 滚动处理
+  function onScroll() {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const docHeight = document.body.scrollHeight - windowHeight;
+    const scrollProgress = Math.min(scrollY / docHeight, 1);
     
-    const shrineImages = [
-      "https://i.ibb.co/fzG9hKJ2/B0031959-81-B0-4-D59-BE9-B-A604-D1-F5-F5-FD.png",
-      "https://i.ibb.co/8gNJZ05N/EBCC9-E01-F032-45-D8-8804-9757-BCF014-F0.png",
-      "https://i.ibb.co/BDRvzsQ/F8-E25-DE0-7408-409-C-90-CF-22-E2-E34-A33-F6.png",
-      "https://i.ibb.co/sdx9TdXZ/938425-DB-3-DD3-4-DAE-AEB7-E1638-B122849.png",
-      "https://i.ibb.co/fzC1ZxCV/IMG-3194.png",
-      "https://i.ibb.co/kVJXgrt6/734-E9-F41-0-DF1-4-CD3-90-CA-2-E789-D96-D496.png",
-      "https://i.ibb.co/SwpFg3Xs/01979-EEF-380-B-4-D94-8-E0-F-698-EA7-B38980.png",
-      "https://i.ibb.co/20tn7nSJ/D7-FA715-F-F1-DA-4259-9-C60-1207-A5-C4-D557.png",
-      "https://i.ibb.co/zTCR1x0X/IMG-3179.png",
-      "https://i.ibb.co/zVFS9fmY/36802-F65-3601-43-FC-84-AE-41-E80-A7-BD68-D.png"
-    ];
-    
-    // 上传页显示10个朱印
-    const grid = document.getElementById('stampsGrid');
-    shrineImages.forEach(src => {
-      const img = document.createElement('img');
-      img.src = src;
-      img.className = 'stamp-thumb';
-      grid.appendChild(img);
-    });
-    
-    // 照片上传预览
-    document.getElementById('photoInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('preview').src = e.target.result;
-          document.getElementById('preview').style.display = 'block';
-          document.getElementById('generateBtn').style.display = 'inline-block';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-    
-    // 生成证书
-    function generate() {
-      document.getElementById('uploadSection').style.display = 'none';
-      document.getElementById('certificateSection').style.display = 'block';
-      
-      // 显示姓名
-      document.getElementById('certName').textContent = name;
-      
-      // 显示日期
-      document.getElementById('certDate').textContent = new Date().toLocaleDateString();
-      
-      // 显示游客照片
-      document.getElementById('certPhoto').src = document.getElementById('preview').src;
-      
-      // 证书页显示10个朱印
-      const stampContainer = document.getElementById('certStamps');
-      shrineImages.forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.className = 'cert-stamp-thumb';
-        stampContainer.appendChild(img);
-      });
-      
-      // 樱花动画
-      for(let i=0; i<15; i++) {
-        const sakura = document.createElement('div');
-        sakura.className = 'sakura';
-        sakura.innerHTML = '🌸';
-        sakura.style.left = Math.random() * 100 + '%';
-        sakura.style.animationDuration = (Math.random() * 3 + 2) + 's';
-        sakura.style.animationDelay = Math.random() * 2 + 's';
-        document.body.appendChild(sakura);
-      }
+    // 照片缩小效果
+    if (scrollY > 100) {
+      const scale = Math.max(0.6, 1 - (scrollY - 100) / 400);
+      visitorPhoto.style.transform = `scale(${scale})`;
+      visitorPhoto.style.opacity = Math.max(0.3, 1 - (scrollY - 100) / 300);
+    } else {
+      visitorPhoto.style.transform = 'scale(1)';
+      visitorPhoto.style.opacity = '1';
     }
-  </script>
+    
+    // 绘制路径
+    const currentLength = pathLength * scrollProgress;
+    path.style.strokeDashoffset = pathLength - currentLength;
+    
+    // 卡片逐个亮起
+    cards.forEach((card) => {
+      const rect = card.getBoundingClientRect();
+      if (rect.top < windowHeight * 0.6) {
+        card.classList.add('active');
+      }
+    });
+  }
+  
+  // 初始化
+  initPath();
+  onScroll();
+  window.addEventListener('scroll', onScroll);
+}
+</script>
+
 </body>
 </html>
